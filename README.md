@@ -9,7 +9,7 @@
 
 VS Code / Cursor extension for document conversion workflows.
 
-Convert Outlook messages, Word documents, and PowerPoint decks to Markdown, and export Markdown back to DOCX. Commands are available from the Explorer context menu.
+Convert Outlook messages, Word documents, and PowerPoint decks to Markdown, and export Markdown back to DOCX. Commands are available from the Explorer or editor context menu, and from the Command Palette (with active-editor or file-picker fallback).
 
 ## Why MdBridge?
 
@@ -25,6 +25,7 @@ Parts of the plugin were developed with AI assistance (pair-programming and code
 | MdBridge: Convert DOCX → Markdown | `.docx` | `.md` |
 | MdBridge: Convert DOCX → Markdown (with comments) | `.docx` | `.md` with inline comment annotations |
 | MdBridge: Export Markdown → DOCX | `.md` | `.docx` |
+| MdBridge: Copy as DOCX Format | `.md` | Rich clipboard (paste into Word or email without creating a file) |
 | MdBridge: Convert PPTX → Markdown | `.pptx` | `.md` (slide text) |
 
 Output files are written next to the source file. If a file with the same name already exists, MdBridge appends `_1`, `_2`, and so on.
@@ -93,7 +94,7 @@ A second editor window opens (**Extension Development Host**). MdBridge is loade
 ### Test conversions
 
 1. In the Extension Development Host window, **File → Open Folder** and pick a directory with `.msg`, `.docx`, `.pptx`, or `.md` files.
-2. Right-click a file in Explorer → choose an **MdBridge:** command, or use the Command Palette (`Ctrl+Shift+P`) and search for `MdBridge`.
+2. Right-click a file in Explorer or the editor → choose an **MdBridge:** command, or use the Command Palette (`Ctrl+Shift+P`) and search for `MdBridge`.
 
 ### Iterating on code
 
@@ -125,32 +126,48 @@ The **Run Extension** launch config runs the `mdbridge: compile` task automatica
 ## Usage
 
 1. Open a workspace folder in VS Code or Cursor.
-2. In the Explorer, right-click a supported file (`.msg`, `.docx`, `.pptx`, or `.md`).
+2. Right-click a supported file in the Explorer (`.msg`, `.docx`, `.pptx`) or in the editor for Markdown commands (`.md`).
 3. Choose the matching MdBridge command.
 
-You can also open the Command Palette (`Ctrl+Shift+P`) and search for `MdBridge`.
+You can also open the Command Palette (`Ctrl+Shift+P`) and search for `MdBridge`. If no file is passed from the context menu, MdBridge uses the active editor file or opens a file picker.
 
-After conversion, Markdown results open in the editor. DOCX exports show a confirmation with the output path.
+After conversion, Markdown results open in the editor. DOCX exports show a confirmation with the output path. **Copy as DOCX Format** puts formatted content on the clipboard so you can paste directly into Word or an email without writing a `.docx` file.
+
+### Settings
+
+| Setting | Default | Description |
+| --- | --- | --- |
+| `mdbridge.extractMsgAttachments` | `false` | Save MSG attachments to a `{output}_attachments` folder next to the generated `.md` file |
 
 ## Project layout
 
 ```
 src/
-  extension.ts          # command registration
-  converters/           # msg, docx, pptx, md converters
-  utils/                # shared file helpers
-dist/extension.js       # bundled output (generated, gitignored)
-.vscode/                # launch and task config for F5 debugging
+  extension.ts              # command registration
+  converters/
+    docxToMd.ts             # Word → Markdown (mammoth + turndown)
+    mdToDocx.ts               # Markdown → DOCX
+    mdToHtml.ts               # Markdown → HTML (clipboard path)
+    markdownBlocks.ts         # shared Markdown parser (DOCX + clipboard)
+    msgToMd.ts                # Outlook MSG → Markdown
+    pptxToMd.ts               # PowerPoint → Markdown
+  utils/
+    fileHelpers.ts            # output paths, collision-safe naming
+    clipboardRichText.ts      # cross-platform rich clipboard
+    resolveCommandUri.ts      # active-editor / file-picker URI fallback
+dist/extension.js           # bundled output (generated, gitignored)
+.vscode/                    # launch and task config for F5 debugging
 ```
 
 ## Conversion fidelity
 
 | Conversion | Notes |
 | --- | --- |
-| MSG → MD | HTML body preferred; plain text fallback; metadata in frontmatter |
+| MSG → MD | HTML body preferred; plain text fallback; metadata in frontmatter; optional attachment extraction |
 | DOCX → MD | High fidelity via [mammoth](https://github.com/mwilliamson/mammoth.js) |
 | DOCX → MD (comments) | Body text plus Word comment metadata (author, date) inline in Markdown |
-| MD → DOCX | Headings, bold, italic; complex Markdown may need pandoc for full fidelity |
+| MD → DOCX | Headings (h1–h6), bold, italic, GFM tables, lists, fenced code blocks, links, inline code; blockquotes and images not supported — use [pandoc](https://pandoc.org/) for full fidelity |
+| Copy as DOCX Format | Same Markdown support as MD → DOCX; output goes to the clipboard instead of a file |
 | PPTX → MD | Slide text extraction; speaker notes not included |
 
 ## Third-party dependencies

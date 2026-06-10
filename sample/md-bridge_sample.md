@@ -29,7 +29,7 @@ The project prioritizes:
 | Proposed duration | 14 weeks     |
 | Budget envelope   | €1.85M (net) |
 
-*Note: Tables are not rendered in the basic DOCX export; they remain readable in Markdown.*
+*Note: GFM tables, lists, fenced code blocks, and links are rendered in DOCX export. Blockquotes and images remain plain text.*
 
 ## Scope of Work
 

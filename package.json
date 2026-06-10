@@ -34,10 +34,21 @@
     "onCommand:mdbridge.docxToMd",
     "onCommand:mdbridge.docxToMdWithComments",
     "onCommand:mdbridge.mdToDocx",
+    "onCommand:mdbridge.copyMdAsDocxFormat",
     "onCommand:mdbridge.pptxToMd"
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "MdBridge",
+      "properties": {
+        "mdbridge.extractMsgAttachments": {
+          "type": "boolean",
+          "default": false,
+          "description": "When converting MSG to Markdown, save attachments to a sibling folder next to the output .md file."
+        }
+      }
+    },
     "commands": [
       {
         "command": "mdbridge.msgToMd",
@@ -54,6 +65,10 @@
       {
         "command": "mdbridge.mdToDocx",
         "title": "MdBridge: Export Markdown → DOCX"
+      },
+      {
+        "command": "mdbridge.copyMdAsDocxFormat",
+        "title": "MdBridge: Copy as DOCX Format"
       },
       {
         "command": "mdbridge.pptxToMd",
@@ -83,8 +98,25 @@
           "group": "mdbridge"
         },
         {
+          "command": "mdbridge.copyMdAsDocxFormat",
+          "when": "resourceExtname == .md",
+          "group": "mdbridge"
+        },
+        {
           "command": "mdbridge.pptxToMd",
           "when": "resourceExtname == .pptx",
+          "group": "mdbridge"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "mdbridge.mdToDocx",
+          "when": "resourceExtname == .md",
+          "group": "mdbridge"
+        },
+        {
+          "command": "mdbridge.copyMdAsDocxFormat",
+          "when": "resourceExtname == .md",
           "group": "mdbridge"
         }
       ]
