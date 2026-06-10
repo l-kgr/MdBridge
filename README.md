@@ -11,6 +11,12 @@ VS Code / Cursor extension for document conversion workflows.
 
 Convert Outlook messages, Word documents, and PowerPoint decks to Markdown, and export Markdown back to DOCX. Commands are available from the Explorer context menu.
 
+## Why MdBridge?
+
+This workflow comes up often — turning Outlook messages, Word docs, and decks into Markdown (and sometimes back to DOCX) — but existing tools were either awkward to fit into a daily editor workflow or did not match what I needed. MdBridge is a small, self-contained extension that does exactly that from the Explorer context menu, without leaving VS Code or Cursor.
+
+Parts of the plugin were developed with AI assistance (pair-programming and code generation). The project is open source so others with the same workflow can use or adapt it.
+
 ## Features
 
 | Command | Input | Output |
@@ -153,7 +159,9 @@ MdBridge bundles several open-source libraries (see `package.json`). Their licen
 
 ## Contributing
 
-Issues and pull requests are welcome at [github.com/l-kgr/MdBridge](https://github.com/l-kgr/MdBridge). Run `npm run compile` before submitting changes.
+Contributions are welcome — issues and pull requests at [github.com/l-kgr/MdBridge](https://github.com/l-kgr/MdBridge). Run `npm run compile` before submitting changes.
+
+That said, MdBridge is intentionally a small, focused tool built for a personal workflow. Whether it will be actively developed further is **TBD**; there is no roadmap or release schedule. Feel free to fork if you need something more maintained or feature-rich.
 
 ## License
 
