@@ -1,7 +1,7 @@
 # MdBridge
 
 [![License](https://img.shields.io/github/license/l-kgr/MdBridge)](LICENSE)
-[![Version](https://img.shields.io/github/package-json/v/l-kgr/MdBridge)](package.json)
+[![Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fl-kgr%2FMdBridge%2Fmain%2Fpackage.json&query=%24.version&label=version)](https://github.com/l-kgr/MdBridge/blob/main/package.json)
 [![VS Code](https://img.shields.io/badge/VS%20Code-1.85%2B-007ACC?logo=visualstudiocode&logoColor=white)](https://code.visualstudio.com/)
 [![Cursor](https://img.shields.io/badge/Cursor-compatible-000000?logo=cursor&logoColor=white)](https://cursor.com/)
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
