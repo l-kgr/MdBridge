@@ -154,7 +154,8 @@ export function normalizeRowCells(cells: string[], columnCount: number): string[
 }
 
 export function parseMarkdownToBlocks(markdown: string): MarkdownBlock[] {
-  const stripped = markdown.replace(/^---[\s\S]*?---\n?/, '').trim();
+  const normalized = markdown.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const stripped = normalized.replace(/^---[\s\S]*?---\n?/, '').trim();
   const lines = stripped.split('\n');
   const blocks: MarkdownBlock[] = [];
 

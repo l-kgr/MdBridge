@@ -142,6 +142,18 @@ describe('parseMarkdownToBlocks', () => {
     expect(blocks).toEqual([{ type: 'code', language: undefined, text: 'no close\nstill code' }]);
   });
 
+  describe('regression: CRLF line endings', () => {
+    it('parses headings and lists when lines end with \\r\\n', () => {
+      const md = '# Title\r\n\r\n- one\r\n- two\r\n';
+      const blocks = parseMarkdownToBlocks(md);
+      expect(blocks).toEqual([
+        { type: 'heading', level: 1, text: 'Title' },
+        { type: 'empty' },
+        { type: 'list', ordered: false, items: ['one', 'two'] }
+      ]);
+    });
+  });
+
   describe('regression: README limitations', () => {
     it('treats blockquotes as paragraphs (no special blockquote type)', () => {
       const blocks = parseMarkdownToBlocks('> quoted text\n');

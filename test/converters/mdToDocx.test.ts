@@ -16,6 +16,20 @@ describe('convertMdToDocx', () => {
     expect(documentXml).toContain('Gross floor area');
   });
 
+  describe('regression: CRLF markdown export', () => {
+    it('applies heading styles and bullet numbering', async () => {
+      const md = '# Title\r\n\r\n- one\r\n- two\r\n';
+      const buf = await convertMdToDocx(md);
+      const zip = await JSZip.loadAsync(buf);
+      const documentXml = await zip.file('word/document.xml')!.async('text');
+
+      expect(documentXml).toContain('w:pStyle w:val="Heading1"');
+      expect(documentXml).toContain('w:pStyle w:val="ListParagraph"');
+      expect(documentXml).toMatch(/<w:numId w:val="1"/);
+      expect(documentXml).not.toContain('# Title');
+    });
+  });
+
   describe('regression: README limitations', () => {
     it('converts blockquotes without throwing', async () => {
       const buf = await convertMdToDocx('> quoted text\n');
