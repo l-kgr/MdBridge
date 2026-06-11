@@ -64,6 +64,8 @@ npm run compile
 | `npm run compile` | One-off production bundle to `dist/` |
 | `npm run watch` | Rebuild `dist/` when `src/` changes |
 | `npm run package` | Production bundle with hidden source maps (used by `vsce package`) |
+| `npm test` | Run internal Vitest suite |
+| `npm run test:watch` | Run tests in watch mode |
 
 ### Create a VSIX installer
 
@@ -163,6 +165,8 @@ src/
     clipboardRichText.ts      # cross-platform rich clipboard
     resolveCommandUri.ts      # active-editor / file-picker URI fallback
 dist/extension.js           # bundled output (generated, gitignored)
+test/                       # Vitest unit and converter tests
+AGENTS.md                   # acceptance criteria for AI-assisted development
 .vscode/                    # launch and task config for F5 debugging
 ```
 
@@ -188,7 +192,7 @@ MdBridge bundles several open-source libraries (see `package.json`). Their licen
 
 ## Contributing
 
-Contributions are welcome — issues and pull requests at [github.com/l-kgr/MdBridge](https://github.com/l-kgr/MdBridge). Run `npm run compile` before submitting changes.
+Contributions are welcome — issues and pull requests at [github.com/l-kgr/MdBridge](https://github.com/l-kgr/MdBridge). Run `npm test` and `npm run compile` before submitting changes. See [AGENTS.md](./AGENTS.md) for test layout and acceptance criteria.
 
 That said, MdBridge is intentionally a small, focused tool built for a personal workflow. Whether it will be actively developed further is **TBD**; there is no roadmap or release schedule. Feel free to fork if you need something more maintained or feature-rich.
 

@@ -26,7 +26,7 @@ function padOffset(value: number): string {
   return value.toString().padStart(10, '0');
 }
 
-function buildCfHtml(fragment: string): string {
+export function buildCfHtml(fragment: string): string {
   const startMarker = '<!--StartFragment-->';
   const endMarker = '<!--EndFragment-->';
   const markup = `<html><body>${startMarker}${fragment}${endMarker}</body></html>`;
