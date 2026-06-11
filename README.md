@@ -9,7 +9,7 @@
 
 VS Code / Cursor extension for document conversion workflows.
 
-Convert Outlook messages, Word documents, and PowerPoint decks to Markdown, and export Markdown back to DOCX. Commands are available from the Explorer or editor context menu, and from the Command Palette (with active-editor or file-picker fallback).
+Convert Outlook messages, Word/LibreOffice documents, and PowerPoint/LibreOffice Impress decks to Markdown, and export Markdown back to DOCX or ODT. Commands are available from the Explorer or editor context menu, and from the Command Palette (with active-editor or file-picker fallback).
 
 ## Why MdBridge?
 
@@ -27,6 +27,9 @@ Parts of the plugin were developed with AI assistance (pair-programming and code
 | MdBridge: Export Markdown → DOCX | `.md` | `.docx` |
 | MdBridge: Copy as DOCX Format | `.md` | Rich clipboard (paste into Word or email without creating a file) |
 | MdBridge: Convert PPTX → Markdown | `.pptx` | `.md` (slide text) |
+| MdBridge: Convert ODT → Markdown | `.odt` | `.md` |
+| MdBridge: Export Markdown → ODT | `.md` | `.odt` |
+| MdBridge: Convert ODP → Markdown | `.odp` | `.md` (slide text) |
 
 Output files are written next to the source file. If a file with the same name already exists, MdBridge appends `_1`, `_2`, and so on.
 
@@ -93,7 +96,7 @@ A second editor window opens (**Extension Development Host**). MdBridge is loade
 
 ### Test conversions
 
-1. In the Extension Development Host window, **File → Open Folder** and pick a directory with `.msg`, `.docx`, `.pptx`, or `.md` files.
+1. In the Extension Development Host window, **File → Open Folder** and pick a directory with `.msg`, `.docx`, `.odt`, `.pptx`, `.odp`, or `.md` files.
 2. Right-click a file in Explorer or the editor → choose an **MdBridge:** command, or use the Command Palette (`Ctrl+Shift+P`) and search for `MdBridge`.
 
 ### Iterating on code
@@ -126,12 +129,12 @@ The **Run Extension** launch config runs the `mdbridge: compile` task automatica
 ## Usage
 
 1. Open a workspace folder in VS Code or Cursor.
-2. Right-click a supported file in the Explorer (`.msg`, `.docx`, `.pptx`) or in the editor for Markdown commands (`.md`).
+2. Right-click a supported file in the Explorer (`.msg`, `.docx`, `.odt`, `.pptx`, `.odp`) or in the editor for Markdown commands (`.md`).
 3. Choose the matching MdBridge command.
 
 You can also open the Command Palette (`Ctrl+Shift+P`) and search for `MdBridge`. If no file is passed from the context menu, MdBridge uses the active editor file or opens a file picker.
 
-After conversion, Markdown results open in the editor. DOCX exports show a confirmation with the output path. **Copy as DOCX Format** puts formatted content on the clipboard so you can paste directly into Word or an email without writing a `.docx` file.
+After conversion, Markdown results open in the editor. DOCX and ODT exports show a confirmation with the output path. **Copy as DOCX Format** puts formatted content on the clipboard so you can paste directly into Word or an email without writing a `.docx` file.
 
 ### Settings
 
@@ -145,12 +148,16 @@ After conversion, Markdown results open in the editor. DOCX exports show a confi
 src/
   extension.ts              # command registration
   converters/
-    docxToMd.ts             # Word → Markdown (mammoth + turndown)
+    docxToMd.ts             # Word (OOXML) → Markdown (mammoth + turndown)
+    odtToMd.ts                # LibreOffice Writer (ODF) → Markdown
     mdToDocx.ts               # Markdown → DOCX
+    mdToOdt.ts                # Markdown → ODT
     mdToHtml.ts               # Markdown → HTML (clipboard path)
-    markdownBlocks.ts         # shared Markdown parser (DOCX + clipboard)
+    markdownBlocks.ts         # shared Markdown parser (DOCX/ODT + clipboard)
+    turndownConfig.ts         # shared HTML → Markdown settings
     msgToMd.ts                # Outlook MSG → Markdown
-    pptxToMd.ts               # PowerPoint → Markdown
+    pptxToMd.ts               # PowerPoint (OOXML) → Markdown
+    odpToMd.ts                # LibreOffice Impress (ODF) → Markdown
   utils/
     fileHelpers.ts            # output paths, collision-safe naming
     clipboardRichText.ts      # cross-platform rich clipboard
@@ -169,6 +176,11 @@ dist/extension.js           # bundled output (generated, gitignored)
 | MD → DOCX | Headings (h1–h6), bold, italic, GFM tables, lists, fenced code blocks, links, inline code; blockquotes and images not supported — use [pandoc](https://pandoc.org/) for full fidelity |
 | Copy as DOCX Format | Same Markdown support as MD → DOCX; output goes to the clipboard instead of a file |
 | PPTX → MD | Slide text extraction; speaker notes not included |
+| ODT → MD | ODF `content.xml` → HTML → Markdown; headings, bold/italic, lists, tables, links; images, text boxes, and annotations not supported |
+| MD → ODT | Same Markdown subset as MD → DOCX; blockquotes and images not supported |
+| ODP → MD | Slide text extraction from ODF `content.xml`; speaker notes not included |
+
+DOCX/PPTX use **OOXML** (Office Open XML). ODT/ODP use **ODF** (Open Document Format). Both are open standards but use different XML inside ZIP packages.
 
 ## Third-party dependencies
 

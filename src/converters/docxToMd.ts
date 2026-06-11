@@ -2,15 +2,7 @@ import mammoth from 'mammoth';
 import TurndownService from 'turndown';
 import JSZip from 'jszip';
 import { DOMParser } from '@xmldom/xmldom';
-
-function createTurndownService(): TurndownService {
-  return new TurndownService({
-    headingStyle: 'atx',
-    hr: '---',
-    bulletListMarker: '-',
-    codeBlockStyle: 'fenced'
-  });
-}
+import { createTurndownService } from './turndownConfig';
 
 export async function convertDocxToMd(buf: Buffer): Promise<string> {
   const result = await mammoth.convertToHtml({ buffer: buf });
